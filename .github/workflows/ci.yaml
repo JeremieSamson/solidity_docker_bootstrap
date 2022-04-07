@@ -1,0 +1,48 @@
+name: CI
+
+on: [push]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install
+        run: npm install
+
+      - name: Run Solium
+        run: ./node_modules/.bin/solium --dir ./contracts/
+
+      - name: Run ESLint
+        run: ./node_modules/.bin/eslint . --ext .js
+
+  test_coverage:
+    name: Test and coverage
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install
+        run: npm install
+
+      - name: Launch Ganache
+        run: npx ganache-cli -h 127.0.0.1&
+
+      - name: Coverage
+        run: node_modules/.bin/truffle run coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
