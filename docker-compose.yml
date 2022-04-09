@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  node:
+    build: ./docker/node
+    tty: true
+    volumes:
+      - .:/app
+
+  ganache:
+    build: ./docker/ganache
+    ports:
+      - 8585:8585
