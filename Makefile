@@ -1,12 +1,20 @@
 DOCKER_COMPOSE?=docker-compose
+
+# Node
 EXEC?=$(DOCKER_COMPOSE) exec $(TTY) node
 NODE?=node
 GANACHE?=$(EXEC) ./node_modules/.bin/ganache
-TRUFFLE?=$(EXEC) truffle
+TRUFFLE?=$(EXEC) ./node_modules/.bin/truffle
 NPM?=$(EXEC) npm
 NPX?=$(EXEC) npx
 SOLIUM?=$(EXEC) ./node_modules/.bin/solium
 ESLINT?=$(EXEC) ./node_modules/.bin/eslint
+
+# React
+REACT_EXEC?=$(DOCKER_COMPOSE) exec $(TTY) react
+REACT_NPM?=$(REACT_EXEC) npm
+
+## DOCKER
 
 .PHONY: build
 
@@ -35,9 +43,13 @@ install: up
 sh:
 	$(EXEC) sh
 
+## NODE
+
 node_modules:
 	$(NPM) install
 	$(NPM) install -g truffle@5.5.7
+
+## TRUFFLE
 
 truffle-init: truffle-config.js
 
@@ -54,6 +66,11 @@ truffle-migrate-reset:
 truffle-test:
 	$(TRUFFLE) test --network docker
 
+truffle-compile:
+	$(TRUFFLE) compile --network docker
+
+## LINT
+
 lint: eslint solium
 
 solium:
@@ -67,3 +84,11 @@ eslint:
 
 eslintfix:
 	$(ESLINT) . --ext .js --fix
+
+## REACT
+
+react-build: truffle-compile
+	$(REACT_NPM) run build
+
+react-start: truffle-compile
+	$(REACT_NPM) run start

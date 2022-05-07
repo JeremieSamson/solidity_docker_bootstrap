@@ -6,7 +6,7 @@ extends:
   - standard
 parserOptions:
   ecmaVersion: 12
-ignorePatterns: ["coverage", "node_modules"]
+ignorePatterns: ["coverage", "node_modules", "client/node_modules"]
 rules: {
   indent: ["error", 4],
   no-undef: "off"
