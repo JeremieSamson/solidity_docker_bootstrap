@@ -11,3 +11,11 @@ services:
     build: ./docker/ganache
     ports:
       - 8585:8585
+
+  react:
+    build: ./docker/node
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/app
