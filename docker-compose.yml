@@ -10,7 +10,7 @@ services:
   ganache:
     build: ./docker/ganache
     ports:
-      - 8585:8585
+      - 8545:8545
 
   react:
     build: ./docker/node
